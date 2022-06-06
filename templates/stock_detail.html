@@ -1,0 +1,175 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Stock Market</title>
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="{% static 'css/amazeui.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/admin.css'%}">
+    <link rel="stylesheet" href="{% static 'css/app.css'%}">
+    <script src="{% static 'js/echarts.min.js'%}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+</head>
+<body data-type="index">
+    <header class="am-topbar admin-header">
+        <div class="am-topbar-brand"><a style="color: #0b76ac ;font-size: 25px">Stock Market</a></div>
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right">
+                <span class="tpl-header-list-user-nick">{{ user.username }}</span>
+                <span class="tpl-header-list-user-ico"> <img src="{% static 'images/user01.png'%}"></span>
+            </ul>
+        </div>
+    </header>
+    <div class="tpl-page-container tpl-page-header-fixed">
+        <div class="tpl-left-nav tpl-left-nav-hover">
+            <div class="tpl-left-nav-title"></div>
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu">
+                    <li class="tpl-left-nav-item">
+                        <a href="../" class="nav-link active">
+                            <i class="am-icon-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-table"></i>
+                            <span>World Indices</span>
+                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                        </a>
+                        <ul class="tpl-left-nav-sub-menu">
+                            <li>
+                                <a href={% url 'stock:world_indices' %}>
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>Historical Data</span>
+                                </a>
+                                <a href={% url 'stock:trend' %}>
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>Trend</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                        </ul>
+                    </li>
+
+                    <li class="tpl-left-nav-item">
+                        <a href="{% url 'account:logout' %}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-key"></i>
+                            <span>Log out</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tpl-content-wrapper">
+            <div class="tpl-content-scope">
+                <div class="note1 note-info">
+                    <h3>{{ symbol }}  :  {{ company }}</h3>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="am-u-md-12 am-u-sm-12 row-mb">
+                    <div class="tpl-portlet">
+                        <div class="tpl-portlet-title">
+                            <div class="tpl-caption font-red ">
+                                <i class="am-icon-bar-chart"></i>
+                                <span> Chart </span>
+                            </div>
+                            <div class="actions">
+                                <li>Historical data for past 12 months</li>
+                            </div>
+                        </div>
+                        <div id="main" style="width: 1200px;height:600px;"></div>
+                    <script >
+                        var myChart = echarts.init(document.getElementById('main'));
+                        var High_price = [];
+                        var xAxis_data = [];
+                        var Low_price = [];
+                        var Open_price = [];
+                        var Close_price = [];
+                        var Volume = [];
+                        {% for data in all_data %}
+                            High_price.push("{{ data.high_price }}")
+                            Low_price.push("{{ data.low_price }}")
+                            Open_price.push("{{ data.open_price }}")
+                            Close_price.push("{{ data.close_price }}")
+                            Volume.push("{{ data.volume }}")
+                            xAxis_data.push("{{ data.date }}")
+                        {% endfor %}
+                        var option = {
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data: ['High', 'Low', 'Open', 'Close', 'Volume'],
+                                selected: {'High':true, 'Low':false, 'Open':false,'Close':false,'Volume':false}
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: xAxis_data
+                            },
+                            yAxis: [{
+                                type: 'value',
+                                scale: true,
+                                selectedMode: 'single',
+                            },
+                            {
+                                type: 'value',
+                                scale: true,
+                                show: false
+                            }],
+                            series: [
+                                {
+                                    name: 'High',
+                                    type: 'line',
+                                    data: High_price
+                                },
+                                {
+                                    name: 'Low',
+                                    type: 'line',
+                                    data: Low_price,
+
+                                },
+                                {
+                                    name: 'Open',
+                                    type: 'line',
+                                    data: Open_price,
+                                },
+                                {
+                                    name: 'Close',
+                                    type: 'line',
+                                    data: Close_price,
+                                },
+                               {
+                                    name: 'Volume',
+                                    type: 'line',
+                                    stack: '总量',
+                                    data: Volume,
+                                    yAxisIndex : 1,
+                                }
+                            ]
+                        };
+                        myChart.setOption(option);
+                    </script>
+                    </div>
+                </div>
+            </div>
+    <script src="{% static 'js/amazeui.min.js'%}"></script>
+    <script src="{% static 'js/iscroll.js'%}"></script>
+    <script src="{% static 'js/app.js'%}"></script>
+        </div>
+    </div>
+</body>
+
+</html>

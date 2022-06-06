@@ -1,0 +1,145 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Stock Market</title>
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="{% static 'css/amazeui.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/admin.css'%}">
+    <link rel="stylesheet" href="{% static 'css/app.css'%}">
+    <script src="{% static 'js/echarts.min.js'%}"></script>
+</head>
+
+<body data-type="index">
+    <header class="am-topbar admin-header">
+        <div class="am-topbar-brand"><a style="color: #0b76ac ;font-size: 25px">Stock Market</a></div>
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right">
+                <span class="tpl-header-list-user-nick">{{ user.username }}</span>
+                <span class="tpl-header-list-user-ico"> <img src="{% static 'images/user01.png'%}"></span>
+            </ul>
+        </div>
+    </header>
+
+    <div class="tpl-page-container tpl-page-header-fixed">
+
+
+        <div class="tpl-left-nav tpl-left-nav-hover">
+            <div class="tpl-left-nav-title"></div>
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu">
+                    <li class="tpl-left-nav-item">
+                        <a href="./" class="nav-link active">
+                            <i class="am-icon-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+
+                    <li class="tpl-left-nav-item">
+                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-table"></i>
+                            <span>World Indices</span>
+                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                        </a>
+                        <ul class="tpl-left-nav-sub-menu">
+                            <li>
+                                <a href={% url 'stock:world_indices' %}>
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>Historical Data</span>
+                                </a>
+                                <a href={% url 'stock:trend' %}>
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>Trend</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                        </ul>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="{% url 'account:logout' %}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-key"></i>
+                            <span>Log out</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tpl-content-wrapper">
+            <div class="tpl-content-scope">
+                <div class="note note-info">
+                    <h3>Search Stock</h3>
+                        <form action={% url 'stock:search_data' %} method="Post">
+                        {% csrf_token %}
+                        <input type="text" name="stock_symbol" placeholder="Search for symbols or companies">
+                        <div class="button">
+                            <input type="submit" value="search">
+                        </div><br>
+                        <div>
+                            {% for message in messages %}
+                            <h5 style="margin-top: 30px; position: absolute; left: 55%">{{ message }}</h5>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="am-u-md-12 am-u-sm-12 row-mb">
+                    <div class="tpl-portlet">
+                        <div class="tpl-portlet-title">
+                            <div class="tpl-caption font-green ">
+                                <i class="am-icon-table"></i>
+                                <span> Max volume </span>
+                            </div>
+                            <table class="am-table tpl-table">
+                            <thead>
+{#                                <tr class="tpl-table-uppercase">#}
+                                    <th>Symbol</th>
+                                    <th>Volume</th>
+                                    <th>Open</th>
+                                    <th>High</th>
+                                    <th>Low</th>
+                                    <th>Close</th>
+                                    <th>change</th>
+                                    <th>change %</th>
+{#                                </tr>#}
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% for i in Max_volume %}
+                                    <td>
+                                        <a href={% url 'stock:click_data' i.stock %} >{{ i.stock }}</a>
+                                    </td>
+                                    <td style="color: #010407;">{{ i.volume}}</td>
+                                    <td>{{ i.open_price}}</td>
+                                    <td>{{ i.high_price}}</td>
+                                    <td>{{ i.low_price}}</td>
+                                    <td>{{ i.close_price}}</td>
+                                    {% if i.change > 0 %}
+                                        <td style="color: red; "> {{ i.change}} ↑</td>
+                                        <td style="color: red"> {{ i.change_percent}} ↑</td>
+                                    {% else %}
+                                        <td style="color: green;padding-left: 2px">{{ i.change}} ↓</td>
+                                        <td style="color: green;padding-left: 2px">{{ i.change_percent}} ↓</td>
+                                    {% endif %}
+
+                                </tr>
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+{#                        <div class="tpl-echarts" id="tpl-echarts-A">#}
+{#                        </div>#}
+                    </div>
+                </div>
+            </div>
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'js/amazeui.min.js'%}"></script>
+    <script src="{% static 'js/iscroll.js'%}"></script>
+    <script src="{% static 'js/app.js'%}"></script>
+        </div> </div></body>
+
+</html>

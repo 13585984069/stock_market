@@ -1,0 +1,86 @@
+p {
+	font-size: 14px;
+	line-height: 22.4px;
+	color: #6c7279;
+}
+h1 {
+	font-size: 40px;
+	color: #2d3033;
+}
+h2 {
+	font-size: 35px;
+	color: #ffa;
+	font-weight: 300;
+	text-align: center;
+	margin-top: 300px;
+}
+h3 {
+	font-size: 30px;
+	color: #fff;
+	font-weight: 400;
+	text-align: center;
+
+}
+h4 {
+	font-size: 14px;
+	color: #2d3033;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+
+#header {
+	position: fixed;
+	width: 100%;
+	z-index: 999;
+	background: transparent;
+}
+#header .header-content {
+	margin: 0 auto;
+	max-width: 1170px;
+	padding: 60px 0;
+	width: 100%
+}
+#header .logo {
+	float: left;
+	font-size: 28px;
+	font-weight: bolder;
+	color: #0385dc;
+	text-decoration:none;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	margin-top: -10px;
+}
+.fc {
+	float: right;
+}
+.fc li {
+	display: inline-block;
+}
+.fc a {
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	margin-left: 40px;
+	text-transform: uppercase;
+}
+
+#main_img {
+    background-image: url('../images/1.jpg');
+    background-repeat: no-repeat;
+	background-size: 100% 100%;
+	min-height: 720px;
+
+	position: center;
+}
+
+
+.account form{
+	position: absolute;
+	left: 600px;
+	top: 300px;
+}
+.account input{
+	width: 200px;
+	height: 30px;
+}

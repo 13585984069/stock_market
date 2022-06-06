@@ -1,0 +1,177 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Stock Market</title>
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="{% static 'css/amazeui.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/admin.css'%}">
+    <link rel="stylesheet" href="{% static 'css/app.css'%}">
+    <script src="{% static 'js/echarts.min.js'%}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+</head>
+<body data-type="index">
+    <header class="am-topbar admin-header">
+        <div class="am-topbar-brand"><a style="color: #0b76ac ;font-size: 25px">Stock Market</a></div>
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right">
+                <span class="tpl-header-list-user-nick">{{ user.username }}</span>
+                <span class="tpl-header-list-user-ico"> <img src="{% static 'images/user01.png'%}"></span>
+            </ul>
+        </div>
+    </header>
+    <div class="tpl-page-container tpl-page-header-fixed">
+        <div class="tpl-left-nav tpl-left-nav-hover">
+            <div class="tpl-left-nav-title">
+            </div>
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu">
+                    <li class="tpl-left-nav-item">
+                        <a href="../" class="nav-link active">
+                            <i class="am-icon-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-table"></i>
+                            <span>World Indices</span>
+                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                        </a>
+                        <ul class="tpl-left-nav-sub-menu">
+                            <li>
+                                <a href={% url 'stock:world_indices' %}>
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>Historical Data</span>
+                                </a>
+                                <a href={% url 'stock:trend' %}>
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>Trend</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                        </ul>
+                    </li>
+
+                    <li class="tpl-left-nav-item">
+                        <a href="{% url 'account:logout' %}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-key"></i>
+                            <span>Log out</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tpl-content-wrapper">
+                <div type="radio" class="row">
+                    <div class="am-u-md-12 am-u-sm-12 row-mb">
+                        <div class="tpl-portlet">
+                            <div class="tpl-portlet-title">
+                                <div class="tpl-caption font-red ">
+                                    <i class="am-icon-bar-chart"></i>
+                                    <span> Chart </span>
+                                </div>
+                                <div class="actions clearfix" style="font-size: 25px;white-space: nowrap">
+                                    <li>Stock Market Trend</li>
+                                </div>
+                            </div>
+                            <table id="main" style="width: 800px;height:500px;">
+                            <script >
+                            var myChart = echarts.init(document.getElementById('main'));
+                            var yAxis_data1 = [];
+                            var yAxis_data2 = [];
+                            var yAxis_data3 = [];
+                            var yAxis_data4 = [];
+                            var xAxis_data = [];
+                            var name_data = []
+                            {% for n in name %}
+                                name_data.push("{{ n }}")
+                            {% endfor %}
+                            {% for d in date %}
+                                xAxis_data.push("{{ d }}")
+                            {% endfor %}
+                            {% for n in result0 %}
+                                yAxis_data1.push("{{ n }}")
+                            {% endfor %}
+                            {% for n in result1 %}
+                                yAxis_data2.push("{{ n }}")
+                            {% endfor %}
+                            {% for n in result2 %}
+                                yAxis_data3.push("{{ n }}")
+                            {% endfor %}
+                            {% for n in result3 %}
+                                yAxis_data4.push("{{ n }}")
+                            {% endfor %}
+                            option = {
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data: name,
+                                selected: {'HANG SENG':true, 'NASDAQ Composite':false, 'Shenzhen Component':false,'Russell 2000':false,'Volume':false}
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: xAxis_data
+                            },
+                            yAxis: {
+                                type: 'value',
+                                scale: true,
+                                selectedMode: 'single',
+                            },
+                            series: [
+                                {
+                                    name: 'HANG SENG',
+                                    type: 'line',
+                                    data: yAxis_data1
+                                },
+                                {
+                                    name: 'NASDAQ Composite',
+                                    type: 'line',
+                                    data: yAxis_data2
+                                },
+                                {
+                                    name: 'Shenzhen Component',
+                                    type: 'line',
+                                    data: yAxis_data3
+                                },
+                                {
+                                    name: 'Russell 2000',
+                                    type: 'line',
+                                    data: yAxis_data4,
+                                },
+                            ]
+                        };
+                            myChart.setOption(option);
+                        </script>
+                        </table>
+                        <h1 style="position:absolute; left:820px; top:25px;">Suggestions:</h1>
+                            <h2 style="position:absolute; left:820px; top:90px;">1.If all the predict trends
+                                rise,then it's a great time to buy stocks. <br><br>
+                                2. If three of the trends rise, the stock market still has possibility to down, you can try<br> to invest with parts of your fund. <br><br>
+                                3. If less than two trends rise, the investment <br> to the stock market will be at a great risk, you should be cautious.  </h2>
+
+
+                    </div>
+                    </div>
+                </div>
+
+    <script src="{% static 'js/amazeui.min.js'%}"></script>
+    <script src="{% static 'js/iscroll.js'%}"></script>
+    <script src="{% static 'js/app.js'%}"></script>
+        </div>
+    </div>
+</body>
+
+</html>

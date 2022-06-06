@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>Home</title>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+
+<body style="margin: 0%">
+<!-- header section -->
+<header id="header">
+<div class="header-content clearfix"> <a class="logo" href="">STOCK MARKET</a>
+  <div class="fc">
+      <li><a href="">Home</a></li>
+      <li><a href="{% url 'account:register' %}">Register</a></li>
+      <li><a href="{% url 'account:login' %}">Login</a></li>
+  </div>
+</div>
+</header>
+
+ 
+<div id="main_img">
+    <div id="chart">
+        <img style="max-width: 200px; position: absolute;left: 300px;top:250px" src="{% static 'images/chart.png'%}">
+    </div><br>
+        <h2>Welcome to stock market</h2>
+        <h3>Save time and Make Money</h3>
+</div>
+
+
+
+</body>
+</html>
